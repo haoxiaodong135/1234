@@ -52,19 +52,4 @@ if st.button("Predict"):
     # Display the SHAP force plot for the predicted class
     shap.force_plot(explainer.expected_value, shap_values[0], pd.DataFrame([feature_values], columns=feature_names), matplotlib=True)
     plt.savefig("shap_force_plot.png", bbox_inches='tight', dpi=1200)
-    # LIME Explanation
-    st.subheader("LIME Explanation")
-    lime_explainer = LimeTabularExplainer(
-        training_data=X_test.values,
-        feature_names=X_test.columns.tolist(),
-        class_names=['Ineffective', 'Effective'],
-        mode='classification'
-    )
-    # Explain the instance
-    lime_exp = lime_explainer.explain_instance(
-        data_row=features.flatten(),
-        predict_fn=model.predict_proba
-    )
-    # Display the LIME explanation without the feature value table
-    lime_html = lime_exp.as_html(show_table=False)
-    st.components.v1.html(lime_html, height=800, scrolling=True)
+    st.image("shap_force_plot.png")
