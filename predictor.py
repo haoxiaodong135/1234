@@ -64,13 +64,10 @@ if st.button("Predict"):
         class_names=['Ineffective', 'Effective'],
         mode='classification'
     )
-    # 自定义 predict_fn，手动构造概率数组
-    predict_fn = lambda x: np.hstack((1 - gbm.predict(x, num_iteration=gbm.best_iteration, type="response").reshape(-1, 1),
-                                  gbm.predict(x, num_iteration=gbm.best_iteration, type="response").reshape(-1, 1)))
     # Explain the instance
     lime_exp = lime_explainer.explain_instance(
         data_row=features.flatten(),
-        predict_fn=predict_fn
+        predict_fn=model.predict_proba
     )
     # Display the LIME explanation without the feature value table
     lime_html = lime_exp.as_html(show_table=False)
