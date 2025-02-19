@@ -5,12 +5,8 @@ import pandas as pd
 import shap
 import matplotlib.pyplot as plt
 from lime.lime_tabular import LimeTabularExplainer
-model = joblib.load('LightGBM.pkl')
-X_test = pd.read_csv('X_test.csv')
-feature_names = [
-    "histology", "Gleason", "Abiraterone", "prostate_RT", "Metastatic_burden", "diabetes", "Metformin",
-    "PTEN", "BRCA", "age", "PSA"
-]
+model = joblib.load('XGBoost.pkl')
+feature_names = ["histology", "Gleason", "Abiraterone", "prostate_RT", "Metastatic_burden", "diabetes", "Metformin","PTEN", "BRCA", "age", "PSA"]
 st.title("Parp inhibitors effectively reduce PSA predictors")
 histology = st.selectbox("Histology:", options=[0, 1], format_func=lambda x: "Other" if x == 1 else "Adenocarcinoma")
 Gleason = st.selectbox("Gleason:", options=[0, 1], format_func=lambda x: "9-10" if x == 1 else "6-8")
@@ -50,6 +46,6 @@ if st.button("Predict"):
     explainer = shap.TreeExplainer(model)
     shap_values = explainer.shap_values(pd.DataFrame([feature_values], columns=feature_names))
     # Display the SHAP force plot for the predicted class
-    shap.force_plot(explainer.expected_value, shap_values[0], pd.DataFrame([feature_values], columns=feature_names), matplotlib=True)
+    shap.force_plot(explainer.expected_value, shap_values[0], pd.DataFrame([feature_values], columns=feature_names), matplotlib=True)        
     plt.savefig("shap_force_plot.png", bbox_inches='tight', dpi=1200)
     st.image("shap_force_plot.png")
